@@ -5,17 +5,20 @@
     <link rel="icon" type="image/svg+xml" href="/logo.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     
-    <meta 
-      http-equiv="Content-Security-Policy" 
-      content="
-        default-src 'self' https://sandbox.payhere.lk;
-        script-src 'self' https://sandbox.payhere.lk 'unsafe-inline' 'unsafe-eval';
-        style-src 'self' https://sandbox.payhere.lk 'unsafe-inline';
-        img-src 'self' https://sandbox.payhere.lk data:;
-        connect-src 'self' https://sandbox.payhere.lk http://localhost:5000;
-        frame-src 'self' https://sandbox.payhere.lk;
-      "
-    />
+   <meta 
+  http-equiv="Content-Security-Policy" 
+  content="
+    default-src 'self' https://sandbox.payhere.lk;
+    script-src 'self' https://sandbox.payhere.lk 'unsafe-eval';
+    style-src 'self' https://sandbox.payhere.lk 'unsafe-inline';
+    img-src 'self' https://sandbox.payhere.lk data:;
+    connect-src 'self' https://sandbox.payhere.lk https://fashion-backend-blgq.onrender.com;
+    frame-src 'self' https://sandbox.payhere.lk;
+    font-src 'self';
+    media-src 'self';
+    object-src 'none';
+  "
+/>
     
     <title>Fashion</title>
   </head>
