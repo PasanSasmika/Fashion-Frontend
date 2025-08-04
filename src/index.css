@@ -1,0 +1,13 @@
+@import "tailwindcss";
+
+@theme {
+  /* Updated Fonts */
+  --font-main: "Playfair Display", serif;
+  --font-second: "Bonheur Royale", cursive;
+  --font-accent: "Inter", sans-serif;
+
+  /* Updated Colors */
+  --color-primary: #fff;
+  --color-secondary: #68513F;
+  --color-accent: #E7DED8;
+}

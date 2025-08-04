@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/logo.png" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    
+    <meta 
+      http-equiv="Content-Security-Policy" 
+      content="
+        default-src 'self' https://sandbox.payhere.lk;
+        script-src 'self' https://sandbox.payhere.lk 'unsafe-inline' 'unsafe-eval';
+        style-src 'self' https://sandbox.payhere.lk 'unsafe-inline';
+        img-src 'self' https://sandbox.payhere.lk data:;
+        connect-src 'self' https://sandbox.payhere.lk http://localhost:5000;
+        frame-src 'self' https://sandbox.payhere.lk;
+      "
+    />
+    
+    <title>Fashion</title>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
+</html>
