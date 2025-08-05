@@ -7,7 +7,6 @@ import CustomerHome from "./pages/HomePages/CustomerHome"
 import AllProducts from "./pages/HomePages/AllProducts"
 import ProductOverview from "./pages/HomePages/ProductOverview"
 import Cart from "./pages/HomePages/Cart"
-import Profile from "./pages/HomePages/Profile"
 import OrderSuccess from "./pages/HomePages/OrderSuccess"
 import OrderCancel from "./pages/HomePages/OrderCancel"
 
@@ -23,7 +22,6 @@ function App() {
      <Route path='/products' element={<AllProducts/>}/>
      <Route path='/productoverview/:id' element={<ProductOverview/>}/>
      <Route path="/cart" element={<Cart />} />
-     <Route path="/profile" element={<Profile />} />
      <Route path="/login" element={<LoginPage />} />
      <Route path="/signup" element={<SignUp />} />
      <Route path='/admin/*' element={<AdminHome/>}/>
