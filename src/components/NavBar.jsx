@@ -135,8 +135,7 @@ function NavBar() {
           {/* <img src={logo} alt="Logo" className="relative bottom-8" /> */}
         </div>
         <div className='lg:hidden flex flex-col w-[150px] items-center justify-center'>
-          <h1 className='pt-3 text-[18px] text-secondary font-main font-bold'>Crystal Beauty</h1>
-          <h2 className='text-[18px] font-main text-secondary'>Clear</h2>
+          <h1 className='pt-3 text-[18px] text-secondary font-main font-bold'>TrendyTees</h1>
         </div>
 
         {/* Mobile Hamburger Icon */}

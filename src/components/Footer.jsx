@@ -102,46 +102,45 @@ const Footer = () => {
             </ul>
           </div>
           
-          {/* Instagram Feed */}
+          {/* Newsletter */}
           <div>
-            <h3 className="font-main text-xl font-semibold mb-5 pb-2 border-b border-[#68513F]/30">#TrendyTees</h3>
-            <div className="grid grid-cols-3 gap-2">
-              {[1, 2, 3, 4, 5, 6].map((item) => (
-                <div key={item} className="aspect-square bg-gradient-to-br from-[#68513F]/10 to-[#68513F]/30 rounded-lg overflow-hidden relative group">
-                  <div className="absolute inset-0 bg-black/10 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                    <FaInstagram className="text-white" size={24} />
-                  </div>
-                </div>
-              ))}
-            </div>
-            <p className="font-accent text-sm mt-4 text-[#68513F]/80">
-              Follow us on Instagram for daily style inspiration
+            <h3 className="font-main text-xl font-semibold mb-5 pb-2 border-b border-[#68513F]/30">Newsletter</h3>
+            <p className="font-accent text-[#68513F]/90 mb-4">
+              Subscribe to get special offers and updates
             </p>
+            <form className="flex flex-col space-y-3">
+              <input 
+                type="email" 
+                placeholder="Your email address" 
+                className="px-4 py-3 rounded-md border border-[#68513F]/30 focus:outline-none focus:ring-1 focus:ring-[#68513F]"
+                required
+              />
+              <button 
+                type="submit"
+                className="bg-[#68513F] text-[#E7DED8] hover:bg-[#68513F]/90 transition-colors px-4 py-3 rounded-md font-accent font-medium"
+              >
+                Subscribe
+              </button>
+            </form>
           </div>
         </div>
         
         {/* Bottom Footer */}
         <div className="border-t border-[#68513F]/20 pt-8 pb-4">
           <div className="flex flex-col md:flex-row justify-between items-center">
-            <div className="flex flex-col md:flex-row items-center">
-              <p className="font-accent text-sm text-[#68513F]/70">
-                © {new Date().getFullYear()} TrendyTees. All rights reserved.
-              </p>
-              <div className="flex space-x-6 mt-2 md:mt-0 md:ml-6">
-                <a href="#" className="font-accent text-[#68513F]/70 hover:text-[#68513F] text-sm">Privacy Policy</a>
-                <a href="#" className="font-accent text-[#68513F]/70 hover:text-[#68513F] text-sm">Terms of Service</a>
-                <a href="#" className="font-accent text-[#68513F]/70 hover:text-[#68513F] text-sm">Shipping Policy</a>
-              </div>
-            </div>
+            <p className="font-accent text-sm text-[#68513F]/70 mb-4 md:mb-0">
+              © {new Date().getFullYear()} TrendyTees. All rights reserved.
+            </p>
             
+            <div className="flex flex-wrap justify-center gap-4 md:gap-6">
+              <a href="#" className="font-accent text-[#68513F]/70 hover:text-[#68513F] text-sm">Privacy Policy</a>
+              <a href="#" className="font-accent text-[#68513F]/70 hover:text-[#68513F] text-sm">Terms of Service</a>
+              <a href="#" className="font-accent text-[#68513F]/70 hover:text-[#68513F] text-sm">Shipping Policy</a>
+              <a href="#" className="font-accent text-[#68513F]/70 hover:text-[#68513F] text-sm">Returns & Exchanges</a>
+            </div>
           </div>
           
-          {/* Signature */}
-          <div className="mt-6 text-center">
-            <p className="font-second text-2xl text-[#68513F] tracking-wide">
-              Creating cleaner spaces
-            </p>
-          </div>
+          
         </div>
       </div>
     </footer>
