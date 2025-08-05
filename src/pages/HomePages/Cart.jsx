@@ -40,54 +40,56 @@ function Cart() {
     return `LKR ${parseFloat(price).toFixed(2)}`;
   };
 
- const handleCheckout = async () => {
-  setCheckoutLoading(true);
-  try {
-    const token = localStorage.getItem('token');
-    if (!token) {
-      toast.error("Please login to proceed to checkout");
-      navigate('/login');
-      return;
-    }
+  const getFullImageUrl = (image) => {
+    return image.startsWith('http') ? image : `${import.meta.env.VITE_BACKEND_URL}${image}`;
+  };
 
-    const response = await axios.post(
-      `${import.meta.env.VITE_BACKEND_URL}/api/orders`,
-      {
-        items: cart,
-        totalAmount: calculateTotal()
-      },
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          'Content-Type': 'application/json'
-        }
+  const handleCheckout = async () => {
+    setCheckoutLoading(true);
+    try {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        toast.error("Please login to proceed to checkout");
+        navigate('/login');
+        return;
       }
-    );
 
-    const { paymentData } = response.data;
-    
-    // Create form dynamically
-    const form = document.createElement('form');
-    form.method = 'POST';
-    form.action = 'https://sandbox.payhere.lk/pay/checkout';
+      const response = await axios.post(
+        `${import.meta.env.VITE_BACKEND_URL}/api/orders`,
+        {
+          items: cart,
+          totalAmount: calculateTotal()
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          }
+        }
+      );
 
-    Object.keys(paymentData).forEach(key => {
-      const input = document.createElement('input');
-      input.type = 'hidden';
-      input.name = key;
-      input.value = paymentData[key];
-      form.appendChild(input);
-    });
+      const { paymentData } = response.data;
+      
+      const form = document.createElement('form');
+      form.method = 'POST';
+      form.action = 'https://sandbox.payhere.lk/pay/checkout';
 
-    document.body.appendChild(form);
-    form.submit();
+      Object.keys(paymentData).forEach(key => {
+        const input = document.createElement('input');
+        input.type = 'hidden';
+        input.name = key;
+        input.value = paymentData[key];
+        form.appendChild(input);
+      });
 
-  } catch (error) {
-    console.error('Checkout failed:', error);
-    toast.error(error.response?.data?.message || 'Checkout failed');
-    setCheckoutLoading(false);
-  }
-};
+      document.body.appendChild(form);
+      form.submit();
+    } catch (error) {
+      console.error('Checkout failed:', error);
+      toast.error(error.response?.data?.message || 'Checkout failed');
+      setCheckoutLoading(false);
+    }
+  };
 
   return (
     <div>
@@ -129,7 +131,7 @@ function Cart() {
                   <div key={index} className="flex flex-col sm:flex-row py-6">
                     <div className="flex-shrink-0">
                       <img
-                        src={item.image}
+                        src={getFullImageUrl(item.image)}
                         alt={item.productName}
                         className="w-24 h-24 object-cover rounded"
                       />
