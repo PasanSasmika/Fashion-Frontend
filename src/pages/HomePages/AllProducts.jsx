@@ -13,19 +13,12 @@ function AllProducts() {
     const fetchProducts = async () => {
       try {
         const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/products`);
-        // Transform relative image paths into full URLs
-        const updatedProducts = response.data.map(product => ({
-          ...product,
-          Images: product.Images.map(img => 
-            img.startsWith('http') ? img : `${import.meta.env.VITE_BACKEND_URL}${img}`
-          )
-        }));
-        setProducts(updatedProducts);
-
+        setProducts(response.data);
+        
         // Extract unique categories
-        const uniqueCategories = ['All', ...new Set(updatedProducts.map(product => product.category))];
+        const uniqueCategories = ['All', ...new Set(response.data.map(product => product.category))];
         setCategories(uniqueCategories);
-
+        
         setLoading(false);
       } catch (error) {
         console.error('Error fetching products:', error);
