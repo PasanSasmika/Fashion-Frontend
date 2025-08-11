@@ -3,7 +3,7 @@ import { useParams, useSearchParams, useNavigate, Link } from 'react-router-dom'
 import axios from 'axios';
 import { toast } from 'react-hot-toast';
 import NavBar from '../../components/NavBar';
-import { saveCart } from '../../context/CartContext'; // Import saveCart to clear cart
+import { saveCart } from '../../context/CartContext';
 
 function OrderedItems() {
   const { orderId } = useParams();
@@ -11,12 +11,12 @@ function OrderedItems() {
   const navigate = useNavigate();
   const [order, setOrder] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [showEmailModal, setShowEmailModal] = useState(false);
+  const [email, setEmail] = useState('');
 
   useEffect(() => {
-    // Get orderId from URL params or query params
     const finalOrderId = orderId || searchParams.get('order_id');
 
-    // Clean up URL by removing query parameters
     if (searchParams.get('order_id') && orderId) {
       navigate(`/ordered-items/${orderId}`, { replace: true });
     }
@@ -42,9 +42,8 @@ function OrderedItems() {
         setLoading(false);
         toast.success('Order placed successfully!');
 
-        // Clear cart after successful order
         if (response.data.status === 'Paid') {
-          saveCart([]); // Clear the cart
+          saveCart([]);
         }
       } catch (error) {
         console.error('Error fetching order details:', error);
@@ -63,6 +62,59 @@ function OrderedItems() {
 
   const formatPrice = (price) => {
     return `LKR ${parseFloat(price).toFixed(2)}`;
+  };
+
+  const handleSendEmail = async () => {
+    if (!email) {
+      toast.error('Please enter a valid email address');
+      return;
+    }
+
+    try {
+      const token = localStorage.getItem('token');
+      await axios.post(
+        `${import.meta.env.VITE_BACKEND_URL}/api/orders/${orderId}/send-email`,
+        { email },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      toast.success('Order details emailed successfully!');
+      setShowEmailModal(false);
+      setEmail('');
+    } catch (error) {
+      console.error('Error sending email:', error);
+      toast.error('Failed to send email');
+    }
+  };
+
+  const handleGeneratePDF = async () => {
+    try {
+      const token = localStorage.getItem('token');
+      const response = await axios.get(
+        `${import.meta.env.VITE_BACKEND_URL}/api/orders/${orderId}/generate-pdf`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+          responseType: 'blob',
+        }
+      );
+
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', `order_${orderId}.pdf`);
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      toast.success('PDF generated successfully!');
+    } catch (error) {
+      console.error('Error generating PDF:', error);
+      toast.error('Failed to generate PDF');
+    }
   };
 
   if (loading) {
@@ -133,7 +185,19 @@ function OrderedItems() {
               </div>
             ))}
           </div>
-          <div className="mt-6">
+          <div className="mt-6 flex space-x-4">
+            <button
+              onClick={() => setShowEmailModal(true)}
+              className="inline-block bg-[#653c20] text-white px-6 py-3 rounded-lg hover:bg-[#824b26] transition"
+            >
+              Send Email
+            </button>
+            <button
+              onClick={handleGeneratePDF}
+              className="inline-block bg-[#653c20] text-white px-6 py-3 rounded-lg hover:bg-[#824b26] transition"
+            >
+              Generate PDF
+            </button>
             <Link
               to="/products"
               className="inline-block bg-[#653c20] text-white px-6 py-3 rounded-lg hover:bg-[#824b26] transition"
@@ -143,6 +207,35 @@ function OrderedItems() {
           </div>
         </div>
       </div>
+
+      {showEmailModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+          <div className="bg-white p-6 rounded-lg shadow-lg max-w-md w-full">
+            <h2 className="text-xl font-semibold mb-4">Send Order Details</h2>
+            <input
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="Enter email address"
+              className="w-full p-2 border rounded mb-4"
+            />
+            <div className="flex justify-end space-x-4">
+              <button
+                onClick={() => setShowEmailModal(false)}
+                className="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleSendEmail}
+                className="px-4 py-2 bg-[#653c20] text-white rounded hover:bg-[#824b26]"
+              >
+                Send
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
