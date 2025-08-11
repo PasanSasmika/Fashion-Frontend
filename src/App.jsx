@@ -7,8 +7,8 @@ import CustomerHome from "./pages/HomePages/CustomerHome"
 import AllProducts from "./pages/HomePages/AllProducts"
 import ProductOverview from "./pages/HomePages/ProductOverview"
 import Cart from "./pages/HomePages/Cart"
-import OrderSuccess from "./pages/HomePages/OrderSuccess"
 import OrderCancel from "./pages/HomePages/OrderCancel"
+import OrderedItems from "./pages/HomePages/OrderedItems"
 
 
 function App() {
@@ -25,7 +25,7 @@ function App() {
      <Route path="/login" element={<LoginPage />} />
      <Route path="/signup" element={<SignUp />} />
      <Route path='/admin/*' element={<AdminHome/>}/>
-     <Route path="/order-success/:orderId" element={<OrderSuccess />} />
+     <Route path="/order-success/:orderId" element={<OrderedItems />} />
      <Route path="/order-cancel/:orderId" element={<OrderCancel />} />
      </Routes>
 
