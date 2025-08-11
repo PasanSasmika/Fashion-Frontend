@@ -1,20 +1,37 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, useSearchParams, useNavigate, Link } from 'react-router-dom';
 import axios from 'axios';
 import { toast } from 'react-hot-toast';
 import NavBar from '../../components/NavBar';
+import { saveCart } from '../../context/CartContext'; // Import saveCart to clear cart
 
 function OrderedItems() {
   const { orderId } = useParams();
+  const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
   const [order, setOrder] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    // Get orderId from URL params or query params
+    const finalOrderId = orderId || searchParams.get('order_id');
+
+    // Clean up URL by removing query parameters
+    if (searchParams.get('order_id') && orderId) {
+      navigate(`/ordered-items/${orderId}`, { replace: true });
+    }
+
     const fetchOrderDetails = async () => {
       try {
         const token = localStorage.getItem('token');
+        if (!token) {
+          toast.error('Please login to view order details');
+          navigate('/login');
+          return;
+        }
+
         const response = await axios.get(
-          `${import.meta.env.VITE_BACKEND_URL}/api/orders/${orderId}`,
+          `${import.meta.env.VITE_BACKEND_URL}/api/orders/${finalOrderId}`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -24,6 +41,11 @@ function OrderedItems() {
         setOrder(response.data);
         setLoading(false);
         toast.success('Order placed successfully!');
+
+        // Clear cart after successful order
+        if (response.data.status === 'Paid') {
+          saveCart([]); // Clear the cart
+        }
       } catch (error) {
         console.error('Error fetching order details:', error);
         toast.error('Failed to load order details');
@@ -31,8 +53,13 @@ function OrderedItems() {
       }
     };
 
-    fetchOrderDetails();
-  }, [orderId]);
+    if (finalOrderId) {
+      fetchOrderDetails();
+    } else {
+      setLoading(false);
+      toast.error('Invalid order ID');
+    }
+  }, [orderId, searchParams, navigate]);
 
   const formatPrice = (price) => {
     return `LKR ${parseFloat(price).toFixed(2)}`;

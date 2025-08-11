@@ -25,7 +25,7 @@ function App() {
      <Route path="/login" element={<LoginPage />} />
      <Route path="/signup" element={<SignUp />} />
      <Route path='/admin/*' element={<AdminHome/>}/>
-     <Route path="/order-success/:orderId" element={<OrderedItems />} />
+      <Route path="/ordered-items/:orderId" element={<OrderedItems />} />
      <Route path="/order-cancel/:orderId" element={<OrderCancel />} />
      </Routes>
 
