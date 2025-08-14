@@ -9,6 +9,7 @@ import ProductOverview from "./pages/HomePages/ProductOverview"
 import Cart from "./pages/HomePages/Cart"
 import OrderCancel from "./pages/HomePages/OrderCancel"
 import OrderedItems from "./pages/HomePages/OrderedItems"
+import Profile from "./pages/HomePages/Profile"
 
 
 function App() {
@@ -20,6 +21,7 @@ function App() {
      <Routes path="/*">
      <Route path='/' element={<CustomerHome/>}/>
      <Route path='/products' element={<AllProducts/>}/>
+     <Route path='/profile' element={<Profile/>}/>
      <Route path='/productoverview/:id' element={<ProductOverview/>}/>
      <Route path="/cart" element={<Cart />} />
      <Route path="/login" element={<LoginPage />} />

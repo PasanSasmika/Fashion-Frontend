@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useRef } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import { FaUser, FaShoppingCart, FaSignOutAlt } from 'react-icons/fa'
+import { FaUser, FaShoppingCart, FaSignOutAlt, FaUserCircle } from 'react-icons/fa'
 import { RxHamburgerMenu } from 'react-icons/rx'
 import { IoMdClose } from 'react-icons/io'
 import { motion } from "framer-motion";
@@ -9,17 +9,40 @@ function NavBar() {
   const [isSliderOpen, setIsSliderOpen] = useState(false)
   const [isMorePages, setIsMorePages] = useState(false)
   const [isLoggedIn, setIsLoggedIn] = useState(false)
+  const [showUserPopup, setShowUserPopup] = useState(false)
   const navigate = useNavigate()
+  const userPopupRef = useRef(null)
 
   useEffect(() => {
     const token = localStorage.getItem('token')
     setIsLoggedIn(!!token)
+    
+    // Close popup when clicking outside
+    const handleClickOutside = (event) => {
+      if (userPopupRef.current && !userPopupRef.current.contains(event.target)) {
+        setShowUserPopup(false)
+      }
+    }
+    
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside)
+    }
   }, [])
 
   const handleLogout = () => {
     localStorage.removeItem('token')
+    localStorage.removeItem('userId')
+    localStorage.removeItem('userType')
     setIsLoggedIn(false)
+    setShowUserPopup(false)
     navigate('/')
+  }
+
+  const handleProfileClick = () => {
+    navigate('/profile')
+    setShowUserPopup(false)
+    setIsSliderOpen(false)
   }
 
   return (
@@ -100,22 +123,32 @@ function NavBar() {
               )}
             </div>
             <div className="w-full mt-6 flex flex-col gap-4">
-              <div
-                onClick={isLoggedIn ? handleLogout : undefined}
-                className="w-full py-3 text-center uppercase font-accent text-secondary text-[20px] hover:bg-gray-100 rounded-lg transition-all duration-300"
-              >
-                {isLoggedIn ? (
-                  <Link to="/" onClick={handleLogout}>
+              {isLoggedIn ? (
+                <>
+                  <div
+                    onClick={handleProfileClick}
+                    className="w-full py-3 text-center uppercase font-accent text-secondary text-[20px] hover:bg-gray-100 rounded-lg transition-all duration-300 cursor-pointer"
+                  >
+                    <FaUserCircle className="inline-block mr-2" />
+                    Profile
+                  </div>
+                  <div
+                    onClick={handleLogout}
+                    className="w-full py-3 text-center uppercase font-accent text-secondary text-[20px] hover:bg-gray-100 rounded-lg transition-all duration-300 cursor-pointer"
+                  >
                     <FaSignOutAlt className="inline-block mr-2" />
                     Logout
-                  </Link>
-                ) : (
-                  <Link to="/login">
-                    <FaUser className="inline-block mr-2" />
-                    Login
-                  </Link>
-                )}
-              </div>
+                  </div>
+                </>
+              ) : (
+                <Link
+                  to="/login"
+                  className="w-full py-3 text-center uppercase font-accent text-secondary text-[20px] hover:bg-gray-100 rounded-lg transition-all duration-300"
+                >
+                  <FaUser className="inline-block mr-2" />
+                  Login
+                </Link>
+              )}
               <Link
                 to="/cart"
                 className="w-full py-3 text-center uppercase font-accent text-secondary text-[20px] hover:bg-gray-100 rounded-lg transition-all duration-300"
@@ -206,24 +239,44 @@ function NavBar() {
 
           {/* User and Cart Icons */}
           <div className="flex absolute right-0 mr-20">
-            <div
-              className="flex w-12 h-12 border-2 ml-4 border-accent items-center justify-center py-4 text-center uppercase font-accent text-secondary text-[20px] hover:bg-gradient-to-r hover:from-gray-100 hover:to-gray-200 rounded-full transition-all duration-300 transform hover:scale-105"
-              onClick={isLoggedIn ? handleLogout : undefined}
-            >
-              {isLoggedIn ? (
-                <Link to="/" onClick={handleLogout}>
-                  <div className="text-[20px]">
-                    <FaSignOutAlt />
+            {isLoggedIn ? (
+              <div className="relative" ref={userPopupRef}>
+                <div
+                  className="flex w-12 h-12 border-2 ml-4 border-accent items-center justify-center py-4 text-center uppercase font-accent text-secondary text-[20px] hover:bg-gradient-to-r hover:from-gray-100 hover:to-gray-200 rounded-full transition-all duration-300 transform hover:scale-105 cursor-pointer"
+                  onClick={() => setShowUserPopup(!showUserPopup)}
+                >
+                  <FaUserCircle className="text-[20px]" />
+                </div>
+                
+                {/* User Popup */}
+                {showUserPopup && (
+                  <div className="absolute right-0 top-full mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-50 border border-gray-200">
+                    <div
+                      className="block px-4 py-3 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer"
+                      onClick={handleProfileClick}
+                    >
+                      <FaUser className="inline-block mr-2" />
+                      Profile
+                    </div>
+                    <div
+                      className="block px-4 py-3 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer"
+                      onClick={handleLogout}
+                    >
+                      <FaSignOutAlt className="inline-block mr-2" />
+                      Logout
+                    </div>
                   </div>
-                </Link>
-              ) : (
-                <Link to="/login">
-                  <div className="text-[20px]">
-                    <FaUser />
-                  </div>
-                </Link>
-              )}
-            </div>
+                )}
+              </div>
+            ) : (
+              <Link
+                to="/login"
+                className="flex w-12 h-12 border-2 ml-4 border-accent items-center justify-center py-4 text-center uppercase font-accent text-secondary text-[20px] hover:bg-gradient-to-r hover:from-gray-100 hover:to-gray-200 rounded-full transition-all duration-300 transform hover:scale-105"
+              >
+                <FaUser className="text-[20px]" />
+              </Link>
+            )}
+            
             <div className="flex w-12 h-12 border-2 ml-4 border-accent items-center justify-center py-4 text-center uppercase font-accent text-secondary text-[20px] hover:bg-gradient-to-r hover:from-gray-100 hover:to-gray-200 rounded-full transition-all duration-300 transform hover:scale-105">
               <Link to="/cart">
                 <div className="text-[20px]">
