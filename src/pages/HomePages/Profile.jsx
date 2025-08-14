@@ -72,7 +72,6 @@ function Profile() {
               <div className="space-y-3">
                 <div className="h-4 bg-gray-100 rounded w-1/3"></div>
                 <div className="h-4 bg-gray-100 rounded w-1/2"></div>
-                <div className="h-4 bg-gray-100 rounded w-1/4 mt-4"></div>
                 <div className="space-y-2 mt-3">
                   <div className="h-12 bg-gray-100 rounded"></div>
                   <div className="h-12 bg-gray-100 rounded"></div>
@@ -141,9 +140,24 @@ function Profile() {
                   <p className="text-gray-700">
                     <span className="font-medium">Total:</span> LKR {order.totalAmount.toFixed(2)}
                   </p>
+                  {order.paymentId && (
+                    <p className="text-gray-700 mt-1">
+                      <span className="font-medium">Payment ID:</span> {order.paymentId}
+                    </p>
+                  )}
                 </div>
                 
-               
+                <div className="bg-green-50 rounded-lg p-4 border border-green-100">
+                  <h4 className="text-sm font-medium text-green-800 mb-2 flex items-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-2" viewBox="0 0 20 20" fill="currentColor">
+                      <path fillRule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clipRule="evenodd" />
+                    </svg>
+                    Order Status
+                  </h4>
+                  <p className="text-gray-700">
+                    <span className="font-medium">Last Updated:</span> {new Date(order.updatedAt).toLocaleDateString()}
+                  </p>
+                </div>
               </div>
               
               <h4 className="text-md font-medium text-gray-700 mb-3 flex items-center">
@@ -157,19 +171,43 @@ function Profile() {
                 {order.items.map((item, index) => (
                   <div 
                     key={index} 
-                    className="flex items-center p-4 bg-gray-50 rounded-lg border border-gray-200 transition-colors hover:bg-gray-100"
+                    className="flex items-start p-4 bg-gray-50 rounded-lg border border-gray-200 transition-colors hover:bg-gray-100"
                   >
-                    <div className="bg-gray-200 border-2 border-dashed rounded-xl w-16 h-16" />
-                    <div className="ml-4 flex-1">
-                      <h5 className="font-medium text-gray-800">{item.productName}</h5>
+                    <div className="flex-shrink-0">
+                      {item.image ? (
+                        <img 
+                          src={item.image} 
+                          alt={item.productName} 
+                          className="w-16 h-16 object-cover rounded-lg border border-gray-200"
+                          onError={(e) => {
+                            e.target.onerror = null;
+                            e.target.parentNode.innerHTML = 
+                              `<div class="bg-gray-200 border-2 border-dashed rounded-xl w-16 h-16 flex items-center justify-center text-gray-400">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                </svg>
+                              </div>`;
+                          }}
+                        />
+                      ) : (
+                        <div className="bg-gray-200 border-2 border-dashed rounded-xl w-16 h-16 flex items-center justify-center text-gray-400">
+                          <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                          </svg>
+                        </div>
+                      )}
+                    </div>
+                    <div className="ml-4 flex-1 min-w-0">
+                      <h5 className="font-medium text-gray-800 truncate">{item.productName}</h5>
                       <div className="flex flex-wrap gap-2 mt-1">
-                        <span className="text-sm text-gray-600 bg-gray-100 px-2 py-1 rounded">Size: {item.size}</span>
-                        <span className="text-sm text-gray-600 bg-gray-100 px-2 py-1 rounded">Qty: {item.quantity}</span>
+                        <span className="text-xs font-medium text-gray-600 bg-gray-100 px-2 py-1 rounded">Size: {item.size}</span>
+                        <span className="text-xs font-medium text-gray-600 bg-gray-100 px-2 py-1 rounded">Qty: {item.quantity}</span>
+                        <span className="text-xs font-medium text-gray-600 bg-gray-100 px-2 py-1 rounded">ID: {item.productId}</span>
                       </div>
                     </div>
-                    <div className="text-right">
+                    <div className="text-right min-w-[100px]">
                       <p className="font-semibold text-gray-800">LKR {item.price.toFixed(2)}</p>
-                      <p className="text-sm text-gray-500 mt-1">LKR {(item.price * item.quantity).toFixed(2)}</p>
+                      <p className="text-sm text-gray-500 mt-1">Subtotal: LKR {(item.price * item.quantity).toFixed(2)}</p>
                     </div>
                   </div>
                 ))}
