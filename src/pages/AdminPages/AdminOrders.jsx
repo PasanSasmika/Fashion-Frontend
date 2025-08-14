@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-// import { format } from 'date-fns';
+import { format } from 'date-fns';
 
 const AdminOrders = () => {
   const [orders, setOrders] = useState([]);
@@ -88,9 +88,9 @@ const AdminOrders = () => {
                   <td className="py-3 px-4">
                     {order.userId?.firstName} {order.userId?.lastName}
                   </td>
-                  {/* <td className="py-3 px-4">
+                  <td className="py-3 px-4">
                     {format(new Date(order.createdAt), 'MMM dd, yyyy HH:mm')}
-                  </td> */}
+                  </td>
                   <td className="py-3 px-4">
                     <div className="max-h-24 overflow-y-auto">
                       {order.items.map((item, index) => (
