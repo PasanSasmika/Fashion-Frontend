@@ -16,15 +16,16 @@ function Login() {
       email,
       password,
     }).then((res) => {
-      if (res.data.user == null) {
-        toast.error(res.data.message);
-        return;
-      }
-      toast.success("Login success");
-      localStorage.setItem('token', res.data.token);
-      localStorage.setItem('userId', res.data.user._id);
-      window.location.href = res.data.user.type === 'admin' ? '/admin' : '/';
-    })
+  if (res.data.user == null) {
+    toast.error(res.data.message);
+    return;
+  }
+  toast.success("Login success");
+  localStorage.setItem('token', res.data.token);
+  localStorage.setItem('userId', res.data.user._id);
+  localStorage.setItem('userType', res.data.user.type);
+  window.location.href = res.data.user.type === 'admin' ? '/admin' : '/';
+})
     .catch((error) => {
       console.log(error)
       toast.error(error.response?.data?.message || "Login failed")
