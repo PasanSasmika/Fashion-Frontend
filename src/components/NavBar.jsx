@@ -130,7 +130,7 @@ function NavBar() {
                     className="w-full py-3 text-center uppercase font-accent text-secondary text-[20px] hover:bg-gray-100 rounded-lg transition-all duration-300 cursor-pointer"
                   >
                     <FaUserCircle className="inline-block mr-2" />
-                    Profile
+                    Orders
                   </div>
                   <div
                     onClick={handleLogout}
@@ -256,7 +256,7 @@ function NavBar() {
                       onClick={handleProfileClick}
                     >
                       <FaUser className="inline-block mr-2" />
-                      Profile
+                     Orders
                     </div>
                     <div
                       className="block px-4 py-3 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer"
